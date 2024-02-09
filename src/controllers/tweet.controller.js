@@ -1,6 +1,5 @@
 import mongoose, { isValidObjectId } from "mongoose";
 import { Tweet } from "../models/tweet.model.js";
-import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -96,7 +95,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
   }
 
   const deletedTweet = await Tweet.findByIdAndDelete(tweetId);
-  if(!deleteTweet){
+  if(!deletedTweet){
     throw new ApiError(500, "Something went wrong while deleting tweet");
 
   }

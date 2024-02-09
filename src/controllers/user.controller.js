@@ -266,6 +266,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   const apid = extractPublicId(oldAvatarURL);
 
   const oldAvatar = await deleteFromCloudinary(apid);
+
   if (!oldAvatar) {
     new ApiError(400, "Error while deleting from cloudinary");
   }
@@ -433,6 +434,8 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       )
     );
 });
+
+
 
 export {
   registerUser,
