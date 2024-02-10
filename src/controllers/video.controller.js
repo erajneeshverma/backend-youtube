@@ -1,5 +1,5 @@
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiError from "../utils/apiError.js";
+import ApiError from "../utils/ApiError.js";
 import { Video } from "../models/video.model.js";
 import { User } from "../models/user.model.js";
 import {
@@ -10,9 +10,13 @@ import ApiResponse from "../utils/ApiResponse.js";
 import mongoose, { isValidObjectId } from "mongoose";
 
 // get all videos based on query, sort, pagination
+
 const getAllVideos = asyncHandler(async (req, res) => {
+
     const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
+    
     console.log(userId);
+    
     const pipeline = [];
 
     // for using Full Text based search u need to create a search index in mongoDB atlas
@@ -20,6 +24,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     // Field mappings specify which fields within your documents should be indexed for text search.
     // this helps in seraching only in title, desc providing faster search results
     // here the name of search index is 'search-videos'
+    
     if (query) {
         pipeline.push({
             $search: {
@@ -49,6 +54,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
     //sortBy can be views, createdAt, duration
     //sortType can be ascending(-1) or descending(1)
+
     if (sortBy && sortType) {
         pipeline.push({
             $sort: {
@@ -80,7 +86,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
             $unwind: "$ownerDetails"
         }
     )
-
+ 
     const videoAggregate = Video.aggregate(pipeline);
 
     const options = {
@@ -96,6 +102,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 });
 
 // get video, upload to cloudinary, create video
+
 const publishAVideo = asyncHandler(async (req, res) => {
     const { title, description } = req.body;
 
@@ -116,7 +123,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
     const videoFile = await uploadOnCloudinary(videoFileLocalPath);
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
-
+    
     if (!videoFile) {
         throw new ApiError(400, "Video file not found");
     }
@@ -124,7 +131,9 @@ const publishAVideo = asyncHandler(async (req, res) => {
     if (!thumbnail) {
         throw new ApiError(400, "Thumbnail not found");
     }
-
+    
+    console.log(videoFile,thumbnail);
+    
     const video = await Video.create({
         title,
         description,
@@ -281,6 +290,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 // update video details like title, description, thumbnail
 const updateVideo = asyncHandler(async (req, res) => {
+
     const { title, description } = req.body;
     const { videoId } = req.params;
 

@@ -1,10 +1,11 @@
 import asyncHandler from "../utils/asyncHandler.js"
-import ApiError from "../utils/apiError.js"
+import ApiError from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
 import {uploadOnCloudinary, deleteOnCloudinary} from "../utils/cloudinary.js"
 import ApiResponse from "../utils/ApiResponse.js"
 import JWT from "jsonwebtoken"
 import mongoose from 'mongoose'
+
 
 const generateAccessAndRefreshToken = async(userId) => {
     
@@ -22,6 +23,7 @@ const generateAccessAndRefreshToken = async(userId) => {
         throw new ApiError(500, "Something went wrong while generating refresh and access token.");
     }
 };
+
 
 const registerUser = asyncHandler( async(req, res) => {
     // get user details from frontend
@@ -211,7 +213,7 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
                 "Access token refreshed"
             )
         )
-
+ 
 });
 
 const changeCurrentPassword = asyncHandler(async(req, res) => {
@@ -244,8 +246,10 @@ const getCurrentUser = asyncHandler(async(req, res) => {
 });
 
 const updateUserDetails = asyncHandler(async(req, res) => {
+    
     const {fullName, email} = req.body;
 
+    console.log(fullName,email);
     if (!fullName || !email) {
         throw new ApiError(400, "All fields are required");
     }
